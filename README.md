@@ -1,2 +1,2 @@
-# malaria_diagnostic_ml_api
-Malaria diagnostic machine learning model api
+# Disease_diagnostic_ml_api
+Disease diagnostic machine learning model api
