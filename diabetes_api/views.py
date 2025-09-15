@@ -5,7 +5,6 @@ import joblib
 import os
 import pandas as pd
 
-# Load model once
 MODEL_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "diabetes_pipeline.joblib")
 model = joblib.load(MODEL_PATH)
 
@@ -19,12 +18,18 @@ class DiabetesPredictView(APIView):
     def post(self, request):
         try:
             data = request.data
-            features_df = pd.DataFrame([{sym: data.get(sym, 0) for sym in SYMPTOMS}])
+
+            # Build a DataFrame from JSON to preserve types
+            features_df = pd.DataFrame([{symptom: data.get(symptom, 0) for symptom in SYMPTOMS}])
+
+            # Predict
             prediction = model.predict(features_df)[0]
             proba = model.predict_proba(features_df)[0][1]
+
             return Response({
-                "prediction": int(prediction),    
+                "prediction": int(prediction),
                 "probability": round(float(proba), 2)
             })
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+  
