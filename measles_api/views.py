@@ -16,6 +16,26 @@ SYMPTOMS = [
     "Comorbidity", "Vaccinated"
 ]
 
+# Normalization helper
+def normalize_value(col, val):
+    if pd.isna(val):
+        return 0
+    if isinstance(val, str):
+        v = val.strip().lower()
+        if v in ["yes", "y", "true", "1"]:
+            return 1
+        if v in ["no", "n", "false", "0"]:
+            return 0
+        if col == "Sex":
+            if v in ["male", "m"]:
+                return 1
+            if v in ["female", "f"]:
+                return 0
+    try:
+        return int(val)
+    except ValueError:
+        return 0
+
 class MeaslesPredictView(APIView):
     def post(self, request):
         try:
@@ -25,13 +45,15 @@ class MeaslesPredictView(APIView):
             if isinstance(data, dict):
                 data = [data]
 
-            # Build DataFrame in correct column order
             df = pd.DataFrame(data)
+
+            # Add missing columns with default 0
             for col in SYMPTOMS:
                 if col not in df.columns:
-                    df[col] = 0  # default missing fields
+                    df[col] = 0
 
-            df = df[SYMPTOMS]
+            # Reorder + normalize values
+            df = df[SYMPTOMS].apply(lambda col: col.map(lambda x: normalize_value(col.name, x)))
 
             # Predict
             prediction = model.predict(df)
@@ -44,8 +66,5 @@ class MeaslesPredictView(APIView):
 
             return Response(results)
 
-        except Exception as e:
+        except Exception as e:  
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-   
-
-       
