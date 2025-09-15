@@ -17,10 +17,8 @@ SYMPTOMS = [
 class DiabetesPredictView(APIView):
     def post(self, request):
         try:
-            data = request.data
-
-            # Build a DataFrame from JSON to preserve types
-            features_df = pd.DataFrame([{symptom: data.get(symptom, 0) for symptom in SYMPTOMS}])
+            # Build a DataFrame from JSON
+            features_df = pd.DataFrame([{symptom: request.data.get(symptom) for symptom in SYMPTOMS}])
 
             # Predict
             prediction = model.predict(features_df)[0]
@@ -32,4 +30,3 @@ class DiabetesPredictView(APIView):
             })
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-  
