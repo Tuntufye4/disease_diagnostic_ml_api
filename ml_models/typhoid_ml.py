@@ -1,21 +1,21 @@
 import pandas as pd
+import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
-import joblib
+from sklearn.metrics import classification_report
 
 # Load dataset
-df = pd.read_csv("diabetes_symptoms.csv")
+df = pd.read_csv("typhoid_symptoms.csv")
 
 # Features and target
-X = df.drop(columns=["Diabetes_Diagnosis", "Patient_ID"])
-y = df["Diabetes_Diagnosis"]
+X = df.drop(columns=["Typhoid_Diagnosis", "Patient_ID"])
+y = df["Typhoid_Diagnosis"]
 
-# Identify categorical & numeric features
-categorical_features = ["Sex", "Family_History", "Obesity"]
+# Separate categorical and numeric columns
+categorical_features = ["Sex", "Comorbidity", "Vaccinated"]
 numeric_features = [col for col in X.columns if col not in categorical_features]
 
 # Preprocessing pipeline
@@ -26,26 +26,23 @@ preprocessor = ColumnTransformer(
     ]
 )
 
-# Complete pipeline with RandomForest
+# Final pipeline with RandomForest
 pipeline = Pipeline([
     ("preprocessor", preprocessor),
     ("classifier", RandomForestClassifier(n_estimators=200, random_state=42))
 ])
 
-# Split data
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
-)
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Train
+# Train model
 pipeline.fit(X_train, y_train)
 
 # Evaluate
 y_pred = pipeline.predict(X_test)
-print("✅ Accuracy:", accuracy_score(y_test, y_pred))
-print("Classification Report:\n", classification_report(y_test, y_pred))
-print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+print("Classification Report:\n")
+print(classification_report(y_test, y_pred))
 
 # Save model
-joblib.dump(pipeline, "diabetes_pipeline.joblib")
-print("💾 Model saved as diabetes_pipeline.joblib")
+joblib.dump(pipeline, "typhoid_pipeline.joblib")
+print("✅ Model saved as typhoid_pipeline.joblib")

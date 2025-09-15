@@ -9,5 +9,6 @@ urlpatterns = [
     path("api/", include("covid_19_api.urls")),
     path("api/", include("measles_api.urls")), 
     path("api/", include("anthrax_api.urls")),
-
+    path("api/", include("typhoid_api.urls")),
+    path("api/", include("diabetes_api.urls")),
 ]
