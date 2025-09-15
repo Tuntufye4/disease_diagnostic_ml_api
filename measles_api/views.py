@@ -58,7 +58,7 @@ class MeaslesPredictView(APIView):
             # Predict
             prediction = model.predict(df)
             proba = model.predict_proba(df)[:, 1]
-
+  
             results = [
                 {"prediction": int(p), "probability": round(float(pr), 2)}
                 for p, pr in zip(prediction, proba)
@@ -66,5 +66,5 @@ class MeaslesPredictView(APIView):
 
             return Response(results)
 
-        except Exception as e:  
+        except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

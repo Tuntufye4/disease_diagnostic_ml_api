@@ -2,7 +2,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier  
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
@@ -114,31 +114,12 @@ if len(importances) == len(feature_names):
     plt.show()
 
 # -------------------------
-# 9) Save the trained pipeline
-# -------------------------
+# 9) Save the trained pipeline + feature list
+# -------------------------   
 MODEL_FILE = "anthrax_pipeline.joblib"
-joblib.dump(pipeline, MODEL_FILE)
+joblib.dump({
+    "model": pipeline,
+    "features": list(X.columns)   # save original training feature order
+}, MODEL_FILE)
 print(f"Trained pipeline saved as: {MODEL_FILE}")
-
-# -------------------------
-# 10) Example: load and predict a single sample
-# -------------------------
-# loaded = joblib.load(MODEL_FILE)
-# example = {
-#     "Age": 50,
-#     "Sex": "Male",
-#     "Fever": 1,
-#     "Chills": 1,
-#     "Fatigue": 1,
-#     "Muscle_Aches": 0,
-#     "Sore_Throat": 0,
-#     "Skin_Lesion": 1,
-#     "Shortness_of_Breath": 0,
-#     "Nausea_Vomiting": 0,
-#     "Confusion": 0,
-#     "Comorbidity": "None"
-# }
-# ex_df = pd.DataFrame([example])
-# pred = loaded.predict(ex_df)[0]
-# proba = loaded.predict_proba(ex_df)[0][1]
-# print("Prediction:", pred, "Probability of Anthrax:", proba)
+           

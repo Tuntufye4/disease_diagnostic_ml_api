@@ -9,11 +9,12 @@ import pandas as pd
 MODEL_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "anthrax_pipeline.joblib")
 model = joblib.load(MODEL_PATH)
 
-NUMERIC_COLS = ["Age","Fever","Chills","Fatigue","Muscle_Aches","Sore_Throat",
+NUMERIC_COLS = ["Age","Fever","Chills","Fatigue","Muscle_Aches","Sore_Throat", 
                 "Skin_Lesion","Shortness_of_Breath","Nausea_Vomiting","Confusion"]
 
 FEATURES = ["Age","Sex","Fever","Chills","Fatigue","Muscle_Aches","Sore_Throat",
             "Skin_Lesion","Shortness_of_Breath","Nausea_Vomiting","Confusion","Comorbidity"]
+
 
 class AnthraxPredictView(APIView):
     def post(self, request):

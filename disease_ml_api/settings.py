@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 SECRET_KEY = 'django-insecure-=3+r0$4d2nk*z@d9=o7ii&^b7qun059pt)##78qcfn^zw20str'
 DEBUG = True
-ALLOWED_HOSTS = ['disease-diagnostic.onrender.com']
+ALLOWED_HOSTS = ['disease-diagnostic.onrender.com','*']   
 
 # Application definition
 INSTALLED_APPS = [
